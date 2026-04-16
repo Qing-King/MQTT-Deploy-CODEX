@@ -1,0 +1,26 @@
+name: emqx-single-node
+
+services:
+  emqx:
+    image: emqx/emqx:${EMQX_IMAGE_TAG:-6.2.0}
+    container_name: emqx
+    restart: unless-stopped
+    environment:
+      EMQX_NAME: emqx
+      EMQX_HOST: 127.0.0.1
+      EMQX_DASHBOARD__DEFAULT_PASSWORD: ${EMQX_DASHBOARD_PASSWORD}
+    ports:
+      - "${EMQX_BIND_1883:-127.0.0.1}:1883:1883"
+      - "${EMQX_BIND_8883:-127.0.0.1}:8883:8883"
+      - "${EMQX_BIND_18083:-127.0.0.1}:18083:18083"
+    volumes:
+      - emqx_data:/opt/emqx/data
+      - emqx_log:/opt/emqx/log
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+volumes:
+  emqx_data:
+  emqx_log:
